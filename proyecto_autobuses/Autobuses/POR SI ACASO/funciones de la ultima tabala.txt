@@ -1,0 +1,66 @@
+        if (isset($_POST['btn_actualizar'])) {
+
+            include("conexion.php");
+    
+            $NO_AUTOBUS = $_POST['NO_AUTOBUS'];
+            $F_PRESTAMO = $_POST['F_PRESTAMO'];
+            $F_INICIO = $_POST['F_INICIO'];
+			$HORA_INICIO = $_POST['HORA_INICIO'];
+			$F_FIN = $_POST['F_FIN'];
+			$HORA_FIN = $_POST['HORA_FIN'];
+			$ORIGEN = $_POST['ORIGEN'];
+			$DESTINO = $_POST['DESTINO'];
+			$CVE_PERSONA = $_POST['CVE_PERSONA'];
+    
+            if($NO_AUTOBUS == "" || $F_PRESTAMO == "" || $F_INICIO == "" || $HORA_INICIO == "" || $F_FIN == "" || $HORA_FIN == "" || $ORIGEN == "" || $DESTINO == "" || $CVE_PERSONA == ""){
+				
+				echo "LOS CAMPOS SON OBLIGATORIOS PARA PODER ACTUALIZAR EL CAMPO";
+			
+			}else{
+                $existe=0;
+    
+                $resultados = mysqli_query($conexion,"SELECT * FROM $prestamo WHERE NO_AUTOBUS = '$NO_AUTOBUS'");
+                while($consulta = mysqli_fetch_array($resultados)){
+    
+                    $existe++;
+                }
+                if($existe==0){
+
+					echo "NO EXISTE, FAVOR DE REGISTRAR UNO";
+					
+                }else{
+                
+                    $_UPDATE_SQL="UPDATE $prestamo Set NO_AUTOBUS = '$NO_AUTOBUS', F_PRESTAMO = '$F_PRESTAMO', F_INICIO = '$F_INICIO', HORA_INICIO = '$HORA_INICIO', F_FIN = '$F_FIN', HORA_FIN = '$HORA_FIN', ORIGEN = '$ORIGEN', DESTINO = '$DESTINO', CVE_PERSONA == '$CVE_PERSONA' WHERE NO_AUTOBUS ='$NO_AUTOBUS'";   
+                    mysqli_query($conexion,$_UPDATE_SQL); 
+                    echo "ACTUALIZACION CON EXITO FAVOR DE CONSULTARLA";
+                }
+            } 
+    
+            include("cerrar.php");   
+        }
+
+        if (isset($_POST['btn_eliminar'])) {
+
+            include("conexion.php");
+    
+            $CVE_PERSONA = $_POST['CVE_PERSONA'];
+            $existe=0;
+    
+            if($CVE_PERSONA == ""){
+                echo "LA CLAVE DE LA PERSONA ES OBLIGATORIO";
+            }else{
+                $resultados = mysqli_query($conexion,"SELECT * FROM $responsable WHERE CVE_PERSONA = '$CVE_PERSONA'");
+                while($consulta = mysqli_fetch_array($resultados)){
+    
+                $existe++;
+            }
+            if($existe==0){
+                echo "EL CVE PERSONA NO EXISTE";
+            }else{
+                //ELIMINAR
+                $_DELETE_SQL = "DELETE FROM $responsable WHERE CVE_PERSONA = '$CVE_PERSONA'";
+                mysqli_query($conexion,$_DELETE_SQL); 
+                echo "LOS DATOS SE ELIMINARON CORRECTAMENTE";
+            }
+            }
+        }
